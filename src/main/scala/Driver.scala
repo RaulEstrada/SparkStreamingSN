@@ -19,7 +19,11 @@ object Driver {
         val hashTag = "#" + args(0).toLowerCase()
         val tweets = twitterStream.map(status => status.getText())
             .filter(text => text.toLowerCase() contains hashTag)
-        tweets.print()
+        val tweetSentiments = tweets.map{tweet =>
+            val sentiment = SentimentUtil.obtainSentiment(tweet)
+            (tweet, sentiment)
+        }
+        tweetSentiments.print()
         context.start()
         context.awaitTermination()
     }
