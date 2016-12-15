@@ -14,4 +14,6 @@ libraryDependencies += "org.apache.spark" %% "spark-streaming" % "2.0.1" % "prov
 libraryDependencies += "org.apache.bahir" %% "spark-streaming-twitter" % "2.0.1"
 libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.5.1"
 libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.5.1" classifier "models"
+libraryDependencies += "com.ibm.watson.developer_cloud" % "tone-analyzer" % "3.5.2"
+
 resolvers += "Akka Repository" at "http://repo.akka.io/releases/"

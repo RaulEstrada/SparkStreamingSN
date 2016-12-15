@@ -1,4 +1,4 @@
-package main.scala
+package main.scala.sentimentAnalyzers
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP
 import edu.stanford.nlp.ling.CoreAnnotations
@@ -7,7 +7,7 @@ import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations
 import java.util.Properties
 import scala.collection.JavaConversions._
 
-object SentimentUtil {
+object StanfordNLP {
     val pipeline =  {
         val properties = new Properties()
         properties.setProperty("annotators", "tokenize, ssplit, pos, lemma, parse, sentiment")
@@ -15,7 +15,6 @@ object SentimentUtil {
     }
 
     def obtainSentiment(text: String): Int = {
-        println("Obtainin sentiment of: " + text)
         val annotation = pipeline.process(text)
         var maxLength = 0
         var finalSentiment = -1

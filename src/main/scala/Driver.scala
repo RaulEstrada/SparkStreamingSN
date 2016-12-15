@@ -7,9 +7,14 @@ import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.twitter._
 import twitter4j.Status
 import main.scala.schema.Tweet
+import main.scala.sentimentAnalyzers.StanfordNLP
+import main.scala.sentimentAnalyzers.TwitterToneAnalyzer
 
 object Driver {
     val SECONDS = 20
+    val EMOTION_MAP = "Emotion Tone"
+    val LANG_TONE_MAP = "Language Tone"
+    val SOCIAL_TONE_MAP = "Social Tone"
 
     def main(args: Array[String]) {
         if (args.length < 1) {
@@ -21,8 +26,13 @@ object Driver {
         val twitterStream = TwitterUtils.createStream(context, None)
         val tweetSentiments = getFilteredTweets(args(0), twitterStream)
             .map{tweet =>
-                val sentiment = SentimentUtil.obtainSentiment(tweet.tweet)
-                (tweet, sentiment)
+                val sentiment = StanfordNLP.obtainSentiment(tweet.tweet)
+                val toneMap = TwitterToneAnalyzer.obtainSentiment(tweet.tweet)
+                tweet.languageToneMap = toneMap.get(LANG_TONE_MAP)
+                tweet.emotionMap = toneMap.get(EMOTION_MAP)
+                tweet.socialToneMap = toneMap.get(SOCIAL_TONE_MAP)
+                tweet.stanfSentiment = Some(sentiment)
+                tweet
             }
         tweetSentiments.print()
         context.start()
