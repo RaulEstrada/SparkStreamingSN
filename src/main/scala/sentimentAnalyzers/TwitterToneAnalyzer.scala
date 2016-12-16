@@ -18,7 +18,7 @@ object TwitterToneAnalyzer {
         val tones = tone.getDocumentTone().getTones()
         var result = scala.collection.mutable.Map[String, scala.collection.mutable.Map[String, Double]]()
         for (toneCategory <- tones) {
-            val toneItem = scala.collection.mutable.Map[String, Double]()
+            val toneItem = scala.collection.mutable.HashMap[String, Double]()
             for (toneScore <- toneCategory.getTones()) {
                 toneItem += (toneScore.getName() -> toneScore.getScore())
             }
