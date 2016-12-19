@@ -12,6 +12,7 @@ import main.scala.sentimentAnalyzers.TwitterToneAnalyzer
 import org.elasticsearch.spark._
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
+import java.text.SimpleDateFormat
 
 object Driver {
     val SECONDS = 20
@@ -28,7 +29,7 @@ object Driver {
         // ElasticSearch-Hadoop configuration tso that ES-Had. creates and index
         // if its missing when writing data to Elastichsearch or fail
         conf.set("es.index.auto.create", "true")
-        conf.set("es.resource", "spark/docs")
+        conf.set("es.resource", "twitter/docs")
         conf.set("es.nodes", "127.0.0.1")
         conf.set("es.port", "9200")
         conf.set("es.nodes.discovery", "true")
@@ -49,7 +50,7 @@ object Driver {
         tweetSentiments.print()
         // Send tweets to ElasticSearch
         tweetSentiments.foreachRDD { rdd =>
-            rdd.saveToEs("spark/docs")
+            rdd.saveToEs("twitter/docs")
         }
 
         context.start()
@@ -61,9 +62,10 @@ object Driver {
         val hashTag = "#" + term.toLowerCase()
         twitterStream.map{status =>
             val username = status.getUser().getName()
-            val date = status.getCreatedAt().toString()
-            val formattedDate = ISODateTimeFormat.dateTime()
-                .parseDateTime(date)
+            val date = status.getCreatedAt()
+            val format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
+            val formattedDateStr = format.format(date)
+            val formattedDate = format.parse(formattedDateStr)
             val tweet = status.getText()
             val location = Option(status.getGeoLocation())
             val lat = location.map(loc => loc.getLatitude)

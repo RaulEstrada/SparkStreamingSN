@@ -1,8 +1,8 @@
 package main.scala.schema
 
-import org.joda.time.DateTime
+import java.util.Date
 
-case class Tweet(val username: String, val creationDate: DateTime, val tweet: String,
+case class Tweet(val username: String, val creationDate: Date, val tweet: String,
     val locationLat: Option[Double], val locationLong: Option[Double],
     var emotionMap: Option[scala.collection.mutable.Map[String, Double]] = None,
     var languageToneMap: Option[scala.collection.mutable.Map[String, Double]] = None,
